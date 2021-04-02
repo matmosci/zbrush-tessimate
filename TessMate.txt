@@ -1,0 +1,33 @@
+/*
+    TessMate for ZBrush
+    https://github.com/matmosci/zbrush-tessmate
+    Author: matmosci
+*/
+
+[VarDef, BtnSize, [IGet,"Preferences:Interface:Buttons Size"]]
+[VarDef, SubPaletteLocation, "Zplugin:TessMate"]
+[VarDef, Repeat, 0]
+[VarDef, PolySize, 1]
+
+[ISubPalette, SubPaletteLocation]
+
+[ISlider, [StrMerge, SubPaletteLocation, ":Polygons Size"], 1, 0.001, 0.05, 25, ,
+	[VarSet, PolySize, [IGet, [StrMerge, SubPaletteLocation, ":Polygons Size"]]]
+	[ISet, "Tool:Geometry:Polygons Size", PolySize],
+	0,
+	[Val, BtnSize*2]
+]
+
+[IButton, [StrMerge, SubPaletteLocation, ":TessAll"], "Apply the result to all SubTools",
+	[Loop, [SubToolGetActiveIndex],
+		[IPress, Tool:SubTool:SelectUp]
+	]
+	[VarSet, Repeat, [Val, [SubToolGetCount]-1]]
+	[ISet, "Tool:Geometry:Polygons Size", PolySize]
+	[Loop, Repeat,
+		[IPress, Tool:SubTool:SelectDown]
+		[ISet, "Tool:Geometry:Polygons Size", PolySize]
+	],
+	0,
+	[Val, BtnSize*2]
+]
